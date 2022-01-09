@@ -1,0 +1,51 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url('{{ req_news.img_url }}')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <h1>{{ req_news.title }}</h1>
+                            <h2 class="subheading">{{ req_news.subtitle }}</h2>
+                            <span class="meta">
+                                Posted by
+                                <a href="#!">{{ req_news.author.name }}</a>
+                                on {{ req_news.date }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Post Content-->
+        <article class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <p>{{ req_news.content|safe }}</p>
+                        {{ ckeditor.load() }}
+                        {{ ckeditor.config(name="comment_text") }}
+                        <h5 id="my-comment">{{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}</h5>
+                        {% for comment in req_news.comments: %}
+                        <ul class="commentList">
+                          <li>
+                            <div class="commenterImage">
+                              <img src="{{ comment.comment_user.email|gravatar }}"/>
+                            </div>
+                            <div class="commentText">
+                                {{ comment.text|safe }}
+                              <span class="date sub-text">{{ comment.comment_user.name }}</span>
+                            </div>
+                         </li>
+                        </ul>
+                         {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </article>
+       {% include "footer.html" %}
+{% endblock %}
